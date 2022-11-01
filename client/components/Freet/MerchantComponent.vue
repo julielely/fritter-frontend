@@ -3,85 +3,28 @@
 
 <template>
   <article
-    class="freet"
+    class="merchant"
   >
-    <header>
-      <h3 class="author">
-        @{{ freet.author }}
-      </h3>
-      <div
-        v-if="$store.state.username === freet.author"
-        class="actions"
-      >
-        <button
-          v-if="editing"
-          @click="submitEdit"
-        >
-          ✅ Save changes
-        </button>
-        <button
-          v-if="editing"
-          @click="stopEditing"
-        >
-          🚫 Discard changes
-        </button>
-        <button
-          v-if="!editing"
-          @click="startEditing"
-        >
-          ✏️ Edit
-        </button>
-        <button @click="deleteFreet">
-          🗑️ Delete
-        </button>
-      </div>
-    </header>
-    <textarea
-      v-if="editing"
-      class="content"
-      :value="draft"
-      @input="draft = $event.target.value"
-    />
-    <div
-      v-else
-      class="content"
-    >
-      <p>{{ freet.content }}</p>
-      <p v-if="freet.freetType == 'merchant'">
-        <!-- {{freet.merchantFreet[0]}} -->
-        <MerchantComponent
-          :key="freet.id"
-          :freet="freet"
-          :merchantFreet="freet.merchantFreet[0]"
-        />
+  <div>
+    <p>{{ merchantFreet.listingStatus == 'forsale' ? 'For Sale' : 'Sold' }}</p>
+    <p>${{merchantFreet.listingPrice}} • {{merchantFreet.listingLocation}} • {{freet.expiration}}</p>
+    <p>{{merchantFreet.listingName}}</p>
+    <button>Buy Now</button>
+  </div>
 
-      </p>
-    </div>
-    <p class="info">
-      Posted at {{ freet.dateModified }}
-      <i v-if="freet.edited">(edited)</i>
-    </p>
-    <section class="alerts">
-      <article
-        v-for="(status, alert, index) in alerts"
-        :key="index"
-        :class="status"
-      >
-        <p>{{ alert }}</p>
-      </article>
-    </section>
   </article>
 </template>
 
 <script>
-import MerchantComponent from '@/components/Freet/MerchantComponent.vue';
-
 export default {
-  name: 'FreetComponent',
-  components: {MerchantComponent},
+  name: 'MerchantComponent',
   props: {
     // Data from the stored freet
     freet: {
+      type: Object,
+      required: true
+    },
+    merchantFreet: {
       type: Object,
       required: true
     }
@@ -179,7 +122,7 @@ export default {
 </script>
 
 <style scoped>
-.freet {
+.merchant {
     border: 1px solid #111;
     padding: 20px;
     position: relative;

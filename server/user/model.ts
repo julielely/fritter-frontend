@@ -1,5 +1,6 @@
 import type {Types} from 'mongoose';
 import {Schema, model} from 'mongoose';
+import {FritterPay} from '../fritterPay/model'
 
 /**
  * This file defines the properties stored in a User
@@ -12,6 +13,7 @@ export type User = {
   username: string;
   password: string;
   dateJoined: Date;
+  fritterPay?: Types.ObjectId;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -33,6 +35,18 @@ const UserSchema = new Schema({
     type: Date,
     required: true
   }
+});
+
+UserSchema.virtual('fritterPay', {
+  ref: 'FritterPay',
+  localField: '_id',
+  foreignField: 'user'
+});
+
+UserSchema.virtual('merchantFreet', {
+  ref: 'MerchantFreet',
+  localField: '_id',
+  foreignField: 'buyer'
 });
 
 const UserModel = model<User>('User', UserSchema);

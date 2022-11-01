@@ -57,8 +57,24 @@ const isValidFreetModifier = async (req: Request, res: Response, next: NextFunct
   next();
 };
 
+/**
+ * Checks if the current user is the author of the freet whose freetId is in req.params
+ */
+ const isValidArchiveViewer = async (req: Request, res: Response, next: NextFunction) => {
+  if (req.session.userId !== req.params.userId) {
+    res.status(403).json({
+      error: 'Cannot see other users\' archived freets.'
+    });
+    return;
+  }
+
+  next();
+};
+
+
 export {
   isValidFreetContent,
   isFreetExists,
-  isValidFreetModifier
+  isValidFreetModifier,
+  isValidArchiveViewer
 };

@@ -11,13 +11,64 @@
         v-for="field in fields"
         :key="field.id"
       >
-        <label :for="field.id">{{ field.label }}:</label>
+      <div v-if="field.id === 'content'">
+        <label :for="field.id" style="display: block;">{{ field.label }}:</label>
         <textarea
-          v-if="field.id === 'content'"
+          style="width: 100%"
           :name="field.id"
           :value="field.value"
           @input="field.value = $event.target.value"
         />
+      </div>
+
+        <!-- Type Containter -->
+        <div v-else-if="field.id ==='typeFreet'">
+          <ul>
+            <li v-for="freetType in field.allFreetTypes">
+              <input type="radio" name="typeFreet"
+                v-model="typeFreet"
+                :value="freetType"
+                :id="freetType"
+                @input="field.value = $event.target.value"
+              >
+              <label :for="freetType" class="radio-label">
+                <img class="`fleet-icons" :src="`images/${freetType}.png`" alt="">
+              </label>
+            </li>
+          </ul>
+        </div> 
+        
+        <div v-else-if="field.id ==='listingName'" v-show="typeFreet == 'merchant'">
+          <label :for="field.id">{{ field.label }}:</label>
+          <input 
+            :id="field.id" 
+            :name="field.id"
+            @input="field.value = $event.target.value">
+        </div>
+
+        <div v-else-if="field.id ==='listingPrice'" v-show="typeFreet == 'merchant'">
+          <label :for="field.id">{{ field.label }}:</label>
+          <input 
+            :id="field.id" 
+            :name="field.id"
+            @input="field.value = $event.target.value"
+            >
+        </div>
+        <div v-else-if="field.id ==='listingLocation'" v-show="typeFreet == 'merchant'">
+          <label :for="field.id">{{ field.label }}:</label>
+          <input :id="field.id" 
+          :name="field.id"
+          @input="field.value = $event.target.value"
+          >
+        </div>
+        <div v-else-if="field.id ==='expirationDate'" v-show="typeFreet == 'merchant' || typeFreet == 'fleeting'">
+          <label :for="field.id">{{ field.label }}:</label>
+          <input type="date" 
+          :id="field.id" 
+          :name="field.id"
+          @input="field.value = $event.target.value">
+        </div>
+
         <input
           v-else
           :type="field.id === 'password' ? 'password' : 'text'"
@@ -56,6 +107,7 @@ export default {
      * Options for submitting this form.
      */
     return {
+      typeFreet:'', // freetType
       url: '', // Url to submit form to
       method: 'GET', // Form request method
       hasBody: false, // Whether or not form request has a body
@@ -148,4 +200,34 @@ textarea {
    font-family: inherit;
    font-size: inherit;
 }
+
+ul {
+    list-style: none;
+}
+li {
+    display: inline-block;
+    margin-right: 15px;
+}
+input[type="radio"]  {
+    visibility:hidden;
+}
+.radio-label {
+    cursor: pointer;
+    border-radius: 100px;
+}
+
+input[type="radio"]:checked + label {
+    background: #882DFF;
+}
+
+.radio-label:hover {
+  background: #E6D2FF;
+}
+
+.radio-label img {
+  transform: translateY(6px);
+  width: 24px;
+  height: auto;
+}
+
 </style>

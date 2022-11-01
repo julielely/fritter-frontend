@@ -12,6 +12,11 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
+        {id: 'typeFreet', label: 'Freet Type', allFreetTypes: ['default', 'merchant', 'fleeting'], value: ''}, // typeFreet
+        {id: 'listingName', label: 'Item Title', value:''}, // listingName
+        {id: 'listingPrice', label: 'Item Price', value:''}, // listingPrice
+        {id: 'listingLocation', label: 'Location', value:''}, // listingLocation
+        {id: 'expirationDate', label: 'Expiration', value: new Date()}, // expirationDate
         {id: 'content', label: 'Content', value: ''}
       ],
       title: 'Create a freet',
