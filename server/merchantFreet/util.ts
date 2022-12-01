@@ -15,6 +15,8 @@ type MerchantFreetResponse = {
   listingLocation: string;
   dateModified: string;
   author: string;
+  paymentUsername: string;
+  paymentType: string;
 };
 
 /**
@@ -70,6 +72,8 @@ const constructMerchantFreetResponse = (merchantFreet: HydratedDocument<Merchant
   const {expiration} = merchantFreetCopy.freet;
   const {authorId} = merchantFreetCopy.freet;
   const {dateModified} = merchantFreetCopy.freet;
+
+
   delete merchantFreetCopy.freet;
   return {
     ...merchantFreetCopy,
@@ -81,7 +85,9 @@ const constructMerchantFreetResponse = (merchantFreet: HydratedDocument<Merchant
     listingPrice: merchantFreet.listingPrice,
     listingLocation: merchantFreet.listingLocation,
     author: authorId.toString(),
-    dateModified: formatDate(dateModified)
+    dateModified: formatDate(dateModified),
+    paymentUsername: merchantFreet.paymentUsername,
+    paymentType: merchantFreet.paymentType
   };
 };
 

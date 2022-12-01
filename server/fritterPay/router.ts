@@ -48,7 +48,7 @@ router.get(
     userValidator.isUserLoggedIn
   ],
   async (req: Request, res: Response) => {
-    const fritterPay = await FritterPayCollection.findAllByUsernane(req.query.author as string);
+    const fritterPay = await FritterPayCollection.findAllByUsername(req.query.author as string);
     const response = fritterPay.map(util.constructFritterPayResponse);
     res.status(200).json(response);
   }
@@ -57,7 +57,7 @@ router.get(
 /**
  * Delete fritterPay entry
  *
- * @name DELETE /api/user/fritterPay/:id
+ * @name DELETE /api/fritterPay/:id
  *
  * @return {string} - A success message
  * @throws {403} - If the user is not logged in or is not the author of
@@ -72,6 +72,8 @@ router.get(
     fritterPayValidator.isfritterPayExists
   ],
   async (req: Request, res: Response) => {
+    console.log(req.params.fritterPayId);
+    console.log(req.params);
     await FritterPayCollection.deleteOne(req.params.fritterPayId);
     res.status(200).json({
       message: 'Your fritterPay entry was deleted successfully.'
@@ -82,7 +84,7 @@ router.get(
 /**
  * Create a new fritterPay object
  *
- * @name POST '/api/users/fritterPay'
+ * @name POST '/api/fritterPay'
  *
  * @param {string} user - The id of the user
  * @param {string} paymentType - The payment type

@@ -1,6 +1,7 @@
 import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {User} from '../user/model';
+import type {MerchantFreet} from '../merchantFreet/model';
 
 /**
  * This file defines the properties stored in a Freet
@@ -11,17 +12,18 @@ import type {User} from '../user/model';
 export type FritterPay = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   user: Types.ObjectId; // references the parent Freet
-  paymentType: String;
-  paymentUsername: String;
-  paymentLink?: String;
+  paymentType: string;
+  paymentUsername: string;
+  paymentLink?: string;
+  merchantFreet?: Types.ObjectId;
 };
 
 export type PopulatedFritterPay = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
   user: User; // references the parent Freet
-  paymentType: String;
-  paymentUsername: String;
-  paymentLink?: String;
+  paymentType: string;
+  paymentUsername: string;
+  paymentLink?: string;
 };
 
 // Mongoose schema definition for interfacing with a MongoDB table
@@ -47,6 +49,9 @@ const FritterPaySchema = new Schema<FritterPay>({
     type: String,
     default: ""
   }
+}, {
+  toObject: { virtuals: true, versionKey: false },
+  toJSON: { virtuals: true, versionKey: false }
 });
 
 const FritterPayModel = model<FritterPay>('FritterPay', FritterPaySchema);

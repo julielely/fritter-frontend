@@ -44,6 +44,16 @@ class FritterPayCollection {
     static async findOne(fritterPayId: Types.ObjectId | string): Promise<HydratedDocument<FritterPay>> {
       return FritterPayModel.findOne({_id: fritterPayId}).populate('user');
     }
+  
+    /**
+   * Find a fritterPay by userId
+   *
+   * @param {string} userId - The id of the user to find FritterPay info
+   * @return {Promise<HydratedDocument<FritterPay>> | Promise<null> } - The freet with the given freetId, if any
+   */
+  static async findOneByUserId(userId: Types.ObjectId | string): Promise<Array<HydratedDocument<FritterPay>>> {
+    return FritterPayModel.findOne({user: userId}).populate('user');
+  }
 
   /**
    * Find a fritterPay by userId
@@ -61,7 +71,7 @@ class FritterPayCollection {
    * @param {string} username - The username of the user to find FritterPay info
    * @return {Promise<HydratedDocument<FritterPay>> | Promise<null> } - The freet with the given freetId, if any
    */
-     static async findAllByUsernane(username: Types.ObjectId | string): Promise<Array<HydratedDocument<FritterPay>>> {
+     static async findAllByUsername(username: Types.ObjectId | string): Promise<Array<HydratedDocument<FritterPay>>> {
       const user = await UserCollection.findOneByUsername(username as string);
       return FritterPayModel.find({user: user._id}).populate('user');
     }

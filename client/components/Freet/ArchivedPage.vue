@@ -5,75 +5,30 @@
     <!-- <div class="dark-overlay"></div> -->
     <div class="main-container">
        <SideNav></SideNav>
-        <!-- <div class="nav-bar">
-          <div class="nav-bar-options">
-            <router-link to="/">
-              Home
-            </router-link>
-            <router-link
-                v-if="$store.state.username"
-                to="/account"
-              >
-              Account
-            </router-link>
-            <router-link
-              v-else
-              to="/login"
-            >
-              Login
-            </router-link>
-            <router-link to="/">
-              Archived
-            </router-link>
-          </div>
-        </div> -->
-
       <div class="freet-content">
-        <section v-if="$store.state.username">
-        <header>
-          <h2>Welcome  <span id="username"> @{{ $store.state.username }}</span></h2>
-        </header>
-        <CreateFreetForm />
-        </section>
-
-        <section v-else>
-          <header>
-            <h2>Welcome to Fritter!</h2>
-          </header>
-          <article>
-            <h3>
-              <router-link to="/login">
-                Sign in
-              </router-link>
-              to create, edit, and delete freets.
-            </h3>
-          </article>
-        </section>
-
         <section>
           <header>
             <div class="left">
               <h2>
-                Viewing all freets
-                <span v-if="$store.state.filter">
-                  by @{{ $store.state.filter }}
-                </span>
+                Archived Freets
               </h2>
             </div>
+            <p>Walking down memory lane with your expired Fleeting or Merchant Freets ✨</p>
             <div class="right">
-              <GetFreetsForm
-                ref="getFreetsForm"
+              <GetArchivedForm
+                ref="getArchivedForm"
                 value="author"
                 placeholder="🔍  Filter by author (optional)"
                 button="🔄 Get freets"
+                style="display: none;"
               />
             </div>
           </header>
           <section
-            v-if="$store.state.freets.length"
+            v-if="$store.state.archivedFreets.length"
           >
             <FreetComponent
-              v-for="freet in $store.state.freets"
+              v-for="freet in $store.state.archivedFreets"
               :key="freet.id"
               :freet="freet"
             />
@@ -81,7 +36,7 @@
           <article
             v-else
           >
-            <h3>No freets found.</h3>
+            <h3>🫙 You have no archived freets. Get freeting!</h3>
           </article>
         </section>
       </div>
@@ -91,15 +46,14 @@
 
 <script>
 import FreetComponent from '@/components/Freet/FreetComponent.vue';
-import CreateFreetForm from '@/components/Freet/CreateFreetForm.vue';
-import GetFreetsForm from '@/components/Freet/GetFreetsForm.vue';
+import GetArchivedForm from '@/components/Freet/GetArchivedForm.vue';
 import SideNav from '@/components/common/SideNav.vue';
 
 export default {
-  name: 'FreetPage',
-  components: {FreetComponent, GetFreetsForm, CreateFreetForm, SideNav},
+  name: 'ArchivedPage',
+  components: {FreetComponent, GetArchivedForm, SideNav},
   mounted() {
-    this.$refs.getFreetsForm.submit();
+    this.$refs.getArchivedForm.submit();
   }
 };
 </script>
@@ -123,6 +77,11 @@ h2 {
   font-size: 28px;
   font-weight: 700;
   line-height: 28px;
+}
+
+h3 {
+  font-weight: 500;
+  color: #69696B;
 }
 .freet-content {
   width: 100%;
@@ -166,9 +125,21 @@ section {
 header, header > * {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
+header p {
+  margin-top: 0px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: left;
+  color: #69696B;
+}
+
+header h2 {
+  margin-bottom: 12px;
+}
 button {
     margin-right: 10px;
 }

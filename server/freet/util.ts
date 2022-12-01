@@ -6,6 +6,7 @@ import type {Freet, PopulatedFreet} from '../freet/model';
 type FreetResponse = {
   _id: string;
   author: string;
+  name: string;
   dateCreated: string;
   content: string;
   dateModified: string;
@@ -19,7 +20,7 @@ type FreetResponse = {
  * @param {Date} date - A date object
  * @returns {string} - formatted date as string
  */
-const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm:ss a');
+const formatDate = (date: Date): string => moment(date).format('MMMM Do YYYY, h:mm a');
 
 /**
  * Check if date is expired
@@ -64,11 +65,13 @@ const constructFreetResponse = (freet: HydratedDocument<Freet>): FreetResponse =
   };
   
   const {username} = freetCopy.authorId;
+  const {name} = freetCopy.authorId;
   delete freetCopy.authorId;
   return {
     ...freetCopy,
     _id: freetCopy._id.toString(),
     author: username,
+    name: name,
     dateCreated: formatDate(freet.dateCreated),
     dateModified: formatDate(freet.dateModified),
     expiration: formatDate(freetCopy.expiration),

@@ -4,23 +4,23 @@
 import InlineForm from '@/components/common/InlineForm.vue';
 
 export default {
-  name: 'GetFreetsForm',
+  name: 'GetArchivedForm',
   mixins: [InlineForm],
   data() {
     return {value: this.$store.state.filter};
   },
   methods: {
     async submit() {
-      const url = this.value ? `/api/freets?author=${this.value}` : '/api/freets/feed';
+      const url = '/api/freets/archived';
       try {
         const r = await fetch(url);
         const res = await r.json();
+        console.log("archived", res);
+        this.$store.commit('updateArchived', res);
+        this.$store.commit('refreshArchived');
         if (!r.ok) {
           throw new Error(res.error);
         }
-
-        this.$store.commit('updateFilter', this.value);
-        this.$store.commit('updateFreets', res);
       } catch (e) {
         if (this.value === this.$store.state.filter) {
           // This section triggers if you filter to a user but they

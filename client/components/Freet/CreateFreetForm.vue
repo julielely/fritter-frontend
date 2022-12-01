@@ -12,12 +12,13 @@ export default {
       method: 'POST',
       hasBody: true,
       fields: [
-        {id: 'typeFreet', label: 'Freet Type', allFreetTypes: ['default', 'merchant', 'fleeting'], value: ''}, // typeFreet
         {id: 'listingName', label: 'Item Title', value:''}, // listingName
         {id: 'listingPrice', label: 'Item Price', value:''}, // listingPrice
         {id: 'listingLocation', label: 'Location', value:''}, // listingLocation
-        {id: 'expirationDate', label: 'Expiration', value: new Date()}, // expirationDate
-        {id: 'content', label: 'Content', value: ''}
+        {id: 'expiration', label: 'Expiration', value: new Date ("4000-01-01")}, // expirationDate
+        {id: 'content', label: 'Content', value: ''},
+        {id: 'typeFreet', label: 'Freet Type', allFreetTypes: ['default', 'merchant', 'fleeting'], value: ''} // typeFreet
+
       ],
       title: 'Create a freet',
       refreshFreets: true,

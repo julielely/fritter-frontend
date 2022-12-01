@@ -9,6 +9,7 @@ import * as util from './util';
 import * as merchantUtil from '../merchantFreet/util';
 import FreetModel from './model';
 import UserCollection from '../user/collection';
+import FritterPayCollection from '../fritterPay/collection';
 
 const router = express.Router();
 
@@ -95,7 +96,7 @@ router.post(
     }
 
     var freet = await FreetCollection.addOne(userId, req.body.content, freetType); // Create freet first
-    freet = await FreetCollection.updateExpiration(freet._id, req.body.expirationDate); // Add expiration date
+    freet = await FreetCollection.updateExpiration(freet._id, req.body.expiration); // Add expiration date
 
     res.status(201).json({
       message: 'Your fleeting was created successfully.',
@@ -103,15 +104,21 @@ router.post(
     });
   }, [
     merchantFreetValidator.isValidMerchantFreetTitle,
-    merchantFreetValidator.isValidPrice
+    merchantFreetValidator.isValidPrice,
+    merchantFreetValidator.fritterPayLinked
   ], async (req: Request, res: Response) => { // MERCHANT FREET
     const userId = (req.session.userId as string) ?? ''; // Will not be an empty string since its validated in isUserLoggedIn
     var freetType = req.body.typeFreet; // Grab freet type, ie merchant
 
+    const fritterPay = await FritterPayCollection.findAllByUserId(userId);
+    const payment = fritterPay[0];
+    const paymentUsername = payment.paymentUsername;
+    const paymentType = payment.paymentType;
+
     const freet = await FreetCollection.addOne(userId, req.body.content, freetType); // Create freet first
-    const updatedFreet = await FreetCollection.updateExpiration(freet._id, req.body.expirationDate); // Add expiration date
-    const merchantFreet = await MerchantFreetCollection.addOne(freet._id, "forsale", req.body.listingName, req.body.listingPrice, req.body.listingLocation);
-     
+    const updatedFreet = await FreetCollection.updateExpiration(freet._id, req.body.expiration); // Add expiration date
+    const merchantFreet = await MerchantFreetCollection.addOne(freet._id, "forsale", req.body.listingName, req.body.listingPrice, req.body.listingLocation, paymentUsername, paymentType); 
+ 
     res.status(201).json({
       message: 'Your merchant freet was created successfully.',
       freet: util.constructFreetResponse(freet),
@@ -172,16 +179,16 @@ router.patch(
     const freeType = await FreetModel.findOne({_id: freetId});
     console.log("modify route is running");
     // Update all forms based off of freetType
-    if (freeType.freetType == "merchant") {
-      const merchantFreet = await MerchantFreetCollection.updateAll(freetId, req.body.listingName, 
-        req.body.listingPrice, req.body.expirationDate, req.body.listingLocation, req.body.content);
-        res.status(200).json({
-          message: 'Your freet was updated successfully.',
-          freet: merchantUtil.constructMerchantFreetResponse(merchantFreet)
-        });
-    }
-    else if (freeType.freetType == "fleeting") {
-      await FreetCollection.updateExpiration(freetId, req.body.expirationDate);
+    // if (freeType.freetType == "merchant") {
+    //   const merchantFreet = await MerchantFreetCollection.updateAll(freetId, req.body.listingName, 
+    //     req.body.listingPrice, req.body.expiration, req.body.listingLocation, req.body.content);
+    //     res.status(200).json({
+    //       message: 'Your freet was updated successfully.',
+    //       freet: merchantUtil.constructMerchantFreetResponse(merchantFreet)
+    //     });
+    // }
+    if (freeType.freetType == "fleeting") {
+      await FreetCollection.updateExpiration(freetId, req.body.expiration);
       const fleetingFreet = await FreetCollection.updateOne(freetId, req.body.content); 
       res.status(200).json({
         message: 'Your freet was updated successfully.',
@@ -290,7 +297,7 @@ router.patch(
 /**
  * Buy merchant freet
  *
- * @name PATCH /api/freets/merchantFreets/
+ * @name PATCH /api/freets/merchantFreets/purchase/:freetId?
  *
  * @return {FreetResponse[]} - An array of freets created by user with id, authorId
  * @throws {400} - If authorId is not given
@@ -301,12 +308,16 @@ router.patch(
   '/merchantFreets/purchase/:freetId?',
   [
     userValidator.isUserLoggedIn,
-    merchantFreetValidator.isForSale
+    merchantFreetValidator.isForSale,
+    merchantFreetValidator.validBuyer
   ],
   async (req: Request, res: Response) => {
     console.log("Run?")
-    const parentFreet = await FreetCollection.findOne(req.body.id);
-    const merchantFreet = await MerchantFreetCollection.findOneByFreet(req.body.id);
+    var freetID = req.params.freetId;
+    // var freetID = req.body.id;
+    // req.params.freetId
+    const parentFreet = await FreetCollection.findOne(freetID);
+    const merchantFreet = await MerchantFreetCollection.findOneByFreet(freetID);
     const merchantFreetId = merchantFreet._id;
 
     // update merchant freet status and buyer
@@ -317,8 +328,6 @@ router.patch(
     console.log(soldMerchantFreet);
   }
 );
-
-/** SORT MERCHANT FREET */
 
 export {router as freetRouter};
 

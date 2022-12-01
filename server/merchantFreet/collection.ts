@@ -22,13 +22,15 @@ class MerchantFreetCollection {
    * @param {number} listingPrice - The item price
    * @return {Promise<HydratedDocument<MerchantFreet>>} - The newly created freet
    */
-  static async addOne(freet: Types.ObjectId | string, listingStatus: string, listingName: string, listingPrice: number, listingLocation: string): Promise<HydratedDocument<MerchantFreet>> {
+  static async addOne(freet: Types.ObjectId | string, listingStatus: string, listingName: string, listingPrice: number, listingLocation: string, paymentUsername: string, paymentType: string): Promise<HydratedDocument<MerchantFreet>> {
     const merchantFreet = new MerchantFreetModel({
       freet, // references the parent Freet
       listingStatus,
       listingName,
       listingPrice,
-      listingLocation
+      listingLocation,
+      paymentUsername,
+      paymentType
     });
     await merchantFreet.save(); // Saves merchant freet to MongoDB
     return merchantFreet.populate('freet');

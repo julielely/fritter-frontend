@@ -6,10 +6,25 @@
     class="merchant"
   >
   <div>
-    <p>{{ merchantFreet.listingStatus == 'forsale' ? 'For Sale' : 'Sold' }}</p>
-    <p>${{merchantFreet.listingPrice}} • {{merchantFreet.listingLocation}} • {{freet.expiration}}</p>
+    <!-- <p>{{ merchantFreet.listingStatus == 'forsale' ? 'For Sale' : 'Sold' }}</p> -->
+    <p><span v-if="merchantFreet.listingStatus == 'forsale' && $store.state.username == freet.author"><button id="merchant-button">For Sale</button></span>
+      <span v-if="merchantFreet.listingStatus == 'sold' && $store.state.username == freet.author"><button id="sold-merchant-button">Sold</button></span>
+      ${{merchantFreet.listingPrice}} • {{merchantFreet.paymentType}} @ {{merchantFreet.paymentUsername}} • {{merchantFreet.listingLocation}}</p>
     <p>{{merchantFreet.listingName}}</p>
-    <button>Buy Now</button>
+    <div v-if="merchantFreet.listingStatus == 'forsale' && $store.state.username == freet.author">
+    </div>
+    <div v-else-if="merchantFreet.listingStatus == 'forsale'">
+      <button
+      @click="buyMerchantFreet"
+      >Buy Now</button>
+    </div>
+    <div v-else>
+      <button v-if="$store.state.username != freet.author" id="sold-button">Sold</button>
+    </div>
+    <div class="expires">
+      <img src="images/fleeting.png" alt="">
+      <p>Expires {{freet.expiration}}</p>
+    </div>
   </div>
 
   </article>
@@ -87,6 +102,22 @@ export default {
       };
       this.request(params);
     },
+    buyMerchantFreet() {
+      /**
+       * Updates freet to have the submitted draft content.
+       */
+
+      const params = {
+        method: 'PATCH',
+        message: 'Successfully purchased merchant freet!',
+        body: JSON.stringify({content: this.draft}),
+        callback: () => {
+          this.$set(this.alerts, params.message, 'success');
+          setTimeout(() => this.$delete(this.alerts, params.message), 3000);
+        }
+      };
+      this.request(params);
+    },
     async request(params) {
       /**
        * Submits a request to the freet's endpoint
@@ -102,7 +133,7 @@ export default {
       }
 
       try {
-        const r = await fetch(`/api/freets/${this.freet._id}`, options);
+        const r = await fetch(`/api/freets/merchantFreets/purchase/${this.freet._id}`, options);
         if (!r.ok) {
           const res = await r.json();
           throw new Error(res.error);
@@ -121,10 +152,117 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&family=Roboto:wght@400;500&display=swap');
+body {
+  font-family: 'Manrope', sans-serif;
+}
+
+p {
+  /* //styleName: Body/Regular/3; */
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 26px;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+button {
+  font-family: 'Manrope';
+}
 .merchant {
-    border: 1px solid #111;
     padding: 20px;
     position: relative;
+    background: #F2F2F2;
+    border-radius: 12px;
+}
+
+.merchant button {
+  background: #074952;
+  color: white;
+  height: 44px;
+  width: auto;
+  border-radius: 8px;
+  padding: 8px 16px 8px 16px;
+  border: none;
+
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+
+  transition: background-color 0.2s ease;
+  transition: .2s ease-out;
+  cursor: pointer;
+}
+
+.merchant button:hover {
+  background: #186670;
+}
+
+.merchant p {
+  margin: 0px 0px 12px 0px;
+}
+
+#merchant-button, #sold-merchant-button {
+  height: auto;
+  width: auto;
+  border-radius: 8px;
+  padding: 6px;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 18px;
+  margin-right: 8px;
+  
+
+  background: #07495233;
+  color: #074952;
+  cursor: auto;
+}
+
+#sold-button, #sold-merchant-button{
+  background: #D5D5DE !important;
+  color: #69696B !important;
+  cursor: auto;
+}
+
+#sold-button:hover, #sold-merchant-button:hover {
+  background: #D5D5DE !important;
+}
+
+#merchant-button:hover {
+  background: #07495233;
+}
+
+.expires {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  align-content: center;
+  margin-top: 8px;
+}
+.expires p {
+  font-family: 'Manrope';
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 26px;
+  letter-spacing: 0em;
+  text-align: left;
+
+  color: #69696B;
+  margin: 0px
+}
+
+.expires img {
+  height: 16px;
+  width: 16px;
+}
+
+.alerts * {
+  width: 100% !important;
+  color: #074952 !important;
+  background: #CCF1DC !important;
+  margin-top: 8px;
 }
 </style>

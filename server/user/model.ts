@@ -10,6 +10,7 @@ import {FritterPay} from '../fritterPay/model'
 // Type definition for User on the backend
 export type User = {
   _id: Types.ObjectId; // MongoDB assigns each object this ID on creation
+  name: string;
   username: string;
   password: string;
   dateJoined: Date;
@@ -20,6 +21,12 @@ export type User = {
 // Users stored in this table will have these fields, with the
 // type given by the type property, inside MongoDB
 const UserSchema = new Schema({
+  // The user's name
+  name: {
+    type: String,
+    required: true,
+    default: "Wellesley Wendy"
+  },
   // The user's username
   username: {
     type: String,

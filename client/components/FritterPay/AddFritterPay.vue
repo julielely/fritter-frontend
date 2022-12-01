@@ -1,26 +1,25 @@
-<!-- Form for registering an account (block style) -->
+<!-- Form for changing password (block style) -->
 
 <script>
 import BlockForm from '@/components/common/BlockForm.vue';
 
 export default {
-  name: 'RegisterForm',
+  name: 'FritterPayForm',
   mixins: [BlockForm],
   data() {
     return {
-      url: '/api/users',
+      url: '/api/fritterPay',
       method: 'POST',
       hasBody: true,
-      setUsername: true,
       fields: [
-      {id: 'name', label: 'Name', value: ''},
+        {id: 'paymentType', label: 'Payment Type', paymentTypes: ['Venmo', 'CashApp', 'Zelle'], value: ''},
         {id: 'username', label: 'Username', value: ''},
-        {id: 'password', label: 'Password', value: ''}
+        {id: 'link', label: 'Link', value: ''}
       ],
-      title: 'Create account',
+      title: 'Add FritterPay',
+      refreshFritterPay: true,
       callback: () => {
-        const message = 'Successfully created an account!';
-        this.$router.push({name: 'Home'});
+        const message = 'Successfully added FritterPay!';
         this.$set(this.alerts, message, 'success');
         setTimeout(() => this.$delete(this.alerts, message), 3000);
       }

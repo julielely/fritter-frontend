@@ -2,6 +2,7 @@ import type {Types, PopulatedDoc, Document} from 'mongoose';
 import {Schema, model} from 'mongoose';
 import type {Freet} from '../freet/model';
 import type {User} from '../user/model';
+import type {FritterPay} from '../fritterPay/model';
 
 /**
  * This file defines the properties stored in a Freet
@@ -16,7 +17,9 @@ export type MerchantFreet = {
   listingName: string;
   listingPrice: number;
   listingLocation: string;
-  payment: string;
+  paymentUsername: string;
+  paymentType: string;
+  // payment: Types.ObjectId;
   buyer: string;
   // editedMerchant: Array<Types.ObjectId>;
 };
@@ -28,7 +31,8 @@ export type PopulatedMerchantFreet = {
   listingName: string;
   listingPrice: number;
   listingLocation: string;
-  payment: string;
+  paymentUsername: string;
+  paymentType: string;
   // editedMerchant: Array<Types.ObjectId>;
 };
 
@@ -66,7 +70,13 @@ const MerchantFreetSchema = new Schema<MerchantFreet>({
     required: true
   },
   // Payment method
-  payment: {
+  paymentUsername: {
+    type: String,
+    required: true,
+    default: "none"
+  },
+  // Payment method
+  paymentType: {
     type: String,
     required: true,
     default: "Venmo"

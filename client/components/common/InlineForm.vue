@@ -53,5 +53,25 @@ form {
 input {
     padding: 0 5px;
     min-width: 200px;
+    min-height: 38px;
+    border: 2px solid #E1E1E6;
+    border-radius: 8px;
+    font-family: 'Manrope';
+}
+
+button {
+  border-radius: 8px;
+  border: none;
+  margin-left: 8px;
+  padding: 4px 12px;
+  font-family: 'Manrope';
+  font-weight: 500;
+
+  transition: background 0.2s ease;
+  transition: .2s ease-out;
+}
+
+button:hover {
+  background: #D5D5DE;
 }
 </style>
