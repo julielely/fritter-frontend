@@ -17,7 +17,7 @@ export default {
         {id: 'listingLocation', label: 'Location', value:''}, // listingLocation
         {id: 'expiration', label: 'Expiration', value: new Date ("4000-01-01")}, // expirationDate
         {id: 'content', label: 'Content', value: ''},
-        {id: 'typeFreet', label: 'Freet Type', allFreetTypes: ['default', 'merchant', 'fleeting'], value: ''} // typeFreet
+        {id: 'typeFreet', label: 'Freet Type', allFreetTypes: ['default', 'merchant', 'fleeting'], value: 'default'} // typeFreet
 
       ],
       title: 'Create a freet',
